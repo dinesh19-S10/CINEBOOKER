@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
-import { getTheatersByMovie } from '../services/api';
 import type { Theater } from '../types';
+import { useLanguage } from '../context/LanguageContext';
 
 const BookingTheaterPage: React.FC = () => {
-  const { bookingState, setBookingDetails, selectedCity } = useAppContext();
+  const { bookingState, setBookingDetails, selectedCity, getTheatersByMovie } = useAppContext();
   const navigate = useNavigate();
   const { movie, date } = bookingState;
+  const { t } = useLanguage();
 
   const [theaters, setTheaters] = useState<Theater[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -22,7 +23,7 @@ const BookingTheaterPage: React.FC = () => {
     } else {
       setTheaters([]); 
     }
-  }, [movie, selectedCity, date]);
+  }, [movie, selectedCity, date, getTheatersByMovie]);
 
   const handleDateSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedDate = e.target.value;
@@ -36,11 +37,11 @@ const BookingTheaterPage: React.FC = () => {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4">Select Date & Theater</h2>
+      <h2 className="text-2xl font-bold mb-4">{t('selectDateAndTheater')}</h2>
       
       <div className="mb-6 space-y-2">
         <label htmlFor="booking-date" className="block text-md font-semibold text-gray-800 dark:text-gray-200">
-          Step 1: Choose a Date
+          {t('step1')}
         </label>
         <input 
           id="booking-date"
@@ -56,10 +57,10 @@ const BookingTheaterPage: React.FC = () => {
       {date && (
         <div className="space-y-2">
           <h3 className="block text-md font-semibold text-gray-800 dark:text-gray-200">
-            Step 2: Choose a Theater in {selectedCity}
+            {t('step2', { city: selectedCity })}
           </h3>
           {isLoading ? (
-            <p>Loading theaters...</p>
+            <p>{t('loadingTheaters')}</p>
           ) : theaters.length > 0 ? (
             <div className="space-y-4 pt-2">
               {theaters.map(theater => (
@@ -74,7 +75,7 @@ const BookingTheaterPage: React.FC = () => {
               ))}
             </div>
           ) : (
-            <p className="pt-2 text-gray-600 dark:text-gray-400">No theaters found for the selected city. Please try another date or change your city from the header.</p>
+            <p className="pt-2 text-gray-600 dark:text-gray-400">{t('noTheatersFound')}</p>
           )}
         </div>
       )}

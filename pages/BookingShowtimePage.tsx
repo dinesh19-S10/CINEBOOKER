@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
-import { getShowtimes } from '../services/api';
 import type { Showtime } from '../types';
+import { useLanguage } from '../context/LanguageContext';
 
 const BookingShowtimePage: React.FC = () => {
-  const { bookingState, setBookingDetails } = useAppContext();
+  const { bookingState, setBookingDetails, getShowtimes } = useAppContext();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { movie, date, theater } = bookingState;
 
   const [showtimes, setShowtimes] = useState<Showtime[]>([]);
@@ -19,7 +20,7 @@ const BookingShowtimePage: React.FC = () => {
         .then(setShowtimes)
         .finally(() => setIsLoading(false));
     }
-  }, [movie, theater, date]);
+  }, [movie, theater, date, getShowtimes]);
 
   if (!theater) {
     return <Navigate to="/booking/theater" />;
@@ -32,12 +33,12 @@ const BookingShowtimePage: React.FC = () => {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4">Select Showtime at {theater.name}</h2>
+      <h2 className="text-2xl font-bold mb-4">{t('selectShowtimeAt', { theater: theater.name })}</h2>
       <p className="mb-4 text-gray-600 dark:text-gray-400">
-        For {new Date(date!).toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+        {t('for')} {new Date(date!).toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
       </p>
       {isLoading ? (
-        <p>Loading showtimes...</p>
+        <p>{t('loadingShowtimes')}</p>
       ) : (
         <div className="flex flex-wrap gap-2">
           {showtimes.map(st => (

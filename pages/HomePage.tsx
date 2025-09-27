@@ -1,59 +1,42 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
-const moviePosters = [
-  'https://picsum.photos/seed/kalki-bg/1920/1080',
-  'https://picsum.photos/seed/pushpa2-bg/1920/1080',
-  'https://picsum.photos/seed/indian2-bg/1920/1080',
-  'https://picsum.photos/seed/singham3-bg/1920/1080',
-  'https://picsum.photos/seed/l2-bg/1920/1080',
-  'https://picsum.photos/seed/kantara1-bg/1920/1080',
-];
+import { useLanguage } from '../context/LanguageContext';
+import { CineMaxIcon } from '../components/icons';
 
 const HomePage: React.FC = () => {
-  const [currentPosterIndex, setCurrentPosterIndex] = useState(0);
+  const { t } = useLanguage();
+  const [dotIndex, setDotIndex] = useState(0);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentPosterIndex(prevIndex => (prevIndex + 1) % moviePosters.length);
-    }, 5000); // Change every 5 seconds
-
+      setDotIndex(prev => (prev + 1) % 3);
+    }, 1000);
     return () => clearInterval(timer);
   }, []);
 
   return (
-    <div className="relative flex-grow flex flex-col items-center justify-center text-center text-white overflow-hidden">
-      {/* Background Image Slideshow */}
-      <div className="absolute inset-0 z-0">
-        {moviePosters.map((posterUrl, index) => (
-          <img
-            key={posterUrl}
-            src={posterUrl}
-            alt="Movie poster background"
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
-              index === currentPosterIndex ? 'opacity-100' : 'opacity-0'
-            }`}
-          />
-        ))}
-        <div className="absolute inset-0 bg-black opacity-60"></div>
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10 p-8">
-        <h1 className="text-5xl md:text-7xl font-extrabold mb-4 drop-shadow-lg">
-          Welcome to CineBook
+    <div className="relative flex-grow flex flex-col items-center justify-center text-center text-white overflow-hidden bg-gradient-to-br from-[#11121e] via-[#2a1a4a] to-[#4f3b78]">
+      <Link to="/login" className="relative z-10 p-8 group">
+        <CineMaxIcon className="h-24 w-24 mx-auto text-amber-400 mb-4 transition-transform duration-300 group-hover:scale-110"/>
+        <h1 className="text-7xl md:text-8xl font-black mb-4 tracking-tighter bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">
+          {t('appName')}
         </h1>
-        <p className="text-lg md:text-2xl mb-8 max-w-2xl mx-auto drop-shadow-md">
-          Your one-stop destination for booking movie tickets. Discover the latest movies, check showtimes, and book your seats in just a few clicks.
+        <p className="text-lg md:text-xl text-gray-300 mb-2">
+          {t('welcomeExperience')}
         </p>
-        <Link
-          to="/main"
-          className="bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 px-8 rounded-full text-lg transition-transform transform hover:scale-105"
-        >
-          Browse Movies
-        </Link>
-      </div>
+        <p className="text-base text-gray-400 max-w-md mx-auto mb-6">
+          {t('welcomePlatform')}
+        </p>
+
+        <div className="flex justify-center space-x-2">
+            <span className={`h-2 w-2 rounded-full transition-colors ${dotIndex === 0 ? 'bg-amber-400' : 'bg-gray-600'}`}></span>
+            <span className={`h-2 w-2 rounded-full transition-colors ${dotIndex === 1 ? 'bg-amber-400' : 'bg-gray-600'}`}></span>
+            <span className={`h-2 w-2 rounded-full transition-colors ${dotIndex === 2 ? 'bg-amber-400' : 'bg-gray-600'}`}></span>
+        </div>
+        <p className="text-xs text-gray-500 mt-6 animate-pulse">
+            {t('clickToGetStarted')}
+        </p>
+      </Link>
     </div>
   );
 };

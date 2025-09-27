@@ -1,9 +1,9 @@
-
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import { AppProvider } from './context/AppContext';
 import { HashRouter } from 'react-router-dom';
+import { LanguageProvider } from './context/LanguageContext';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -15,7 +15,9 @@ root.render(
   <React.StrictMode>
     <HashRouter>
       <AppProvider>
-        <App />
+        <LanguageProvider>
+          <App />
+        </LanguageProvider>
       </AppProvider>
     </HashRouter>
   </React.StrictMode>

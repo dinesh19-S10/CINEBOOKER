@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useAppContext } from '../context/AppContext';
 import { UserCircleIcon } from '../components/icons';
+import { useLanguage } from '../context/LanguageContext';
 
 const ProfilePage: React.FC = () => {
-  const { user, login } = useAppContext();
+  const { user, updateUser } = useAppContext();
+  const { t } = useLanguage();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     username: user?.username || '',
@@ -23,8 +25,7 @@ const ProfilePage: React.FC = () => {
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    const updatedUser = { ...user, ...formData };
-    login(updatedUser); // Update context and session storage
+    updateUser(formData);
     setIsEditing(false);
   };
 
@@ -46,11 +47,11 @@ const ProfilePage: React.FC = () => {
           </div>
 
           <div className="mt-10 border-t border-gray-200 dark:border-gray-700 pt-8">
-            <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-6">Personal Information</h2>
+            <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-6">{t('personalInformation')}</h2>
             <form onSubmit={handleSave}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Username</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t('username')}</label>
                   <input
                     type="text"
                     name="username"
@@ -61,7 +62,7 @@ const ProfilePage: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email Address</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t('email')}</label>
                   <input
                     type="email"
                     name="email"
@@ -72,7 +73,7 @@ const ProfilePage: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Phone Number</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t('phoneNumber')}</label>
                   <input
                     type="tel"
                     name="phone"
@@ -83,7 +84,7 @@ const ProfilePage: React.FC = () => {
                   />
                 </div>
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Address</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t('address')}</label>
                   <textarea
                     name="address"
                     rows={3}
@@ -98,15 +99,15 @@ const ProfilePage: React.FC = () => {
                 {isEditing ? (
                   <>
                     <button type="button" onClick={() => setIsEditing(false)} className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 dark:bg-gray-600 dark:text-gray-200 dark:border-gray-500 dark:hover:bg-gray-500">
-                      Cancel
+                      {t('cancel')}
                     </button>
                     <button type="submit" className="px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-md shadow-sm hover:bg-primary-700">
-                      Save Changes
+                      {t('saveChanges')}
                     </button>
                   </>
                 ) : (
                   <button type="button" onClick={() => setIsEditing(true)} className="px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-md shadow-sm hover:bg-primary-700">
-                    Edit Profile
+                    {t('editProfile')}
                   </button>
                 )}
               </div>

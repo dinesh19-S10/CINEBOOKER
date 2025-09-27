@@ -1,36 +1,48 @@
-
 import React from 'react';
 import type { Movie } from '../types';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
+import { StarIcon } from './icons';
 
 interface MovieCardProps {
   movie: Movie;
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
-  const navigate = useNavigate();
   const { setBookingMovie } = useAppContext();
 
-  const handleBookNow = () => {
+  const handleCardClick = () => {
     setBookingMovie(movie);
-    navigate(`/movie/${movie.id}`);
   };
   
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 ease-in-out">
-      <img className="w-full h-96 object-cover" src={movie.posterUrl} alt={movie.title} />
-      <div className="p-4">
-        <h3 className="text-xl font-bold text-gray-900 dark:text-white">{movie.title}</h3>
-        <p className="text-gray-600 dark:text-gray-400 mt-1">{movie.language} &bull; {movie.genre}</p>
-        <button
-          onClick={handleBookNow}
-          className="mt-4 w-full bg-primary-600 text-white py-2 rounded-lg font-semibold hover:bg-primary-700 transition-colors"
-        >
-          Book Now
-        </button>
+    <Link 
+      to={`/movie/${movie.id}`} 
+      onClick={handleCardClick}
+      className="block group relative rounded-lg overflow-hidden shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-2xl"
+    >
+      <img className="w-full h-full object-cover" src={movie.posterUrl} alt={movie.title} />
+      
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-100 transition-opacity duration-300"></div>
+
+      <div className="absolute top-2 right-2 bg-black/50 backdrop-blur-sm rounded-full px-2 py-1 flex items-center space-x-1 text-xs font-bold text-amber-400">
+          <StarIcon className="w-4 h-4"/>
+          <span>{movie.rating.toFixed(1)}</span>
       </div>
-    </div>
+
+       <div className="absolute top-2 left-2 bg-black/50 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-semibold text-white">
+          {movie.language}
+      </div>
+      
+      <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+        <h3 className="text-lg font-bold truncate">{movie.title}</h3>
+        <div className="flex flex-wrap gap-2 mt-1">
+          <span className="text-xs font-semibold bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full">{movie.genre}</span>
+          <span className="text-xs font-semibold bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full">{movie.duration} min</span>
+          <span className="text-xs font-semibold bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full">{new Date(movie.releaseDate).getFullYear()}</span>
+        </div>
+      </div>
+    </Link>
   );
 };
 

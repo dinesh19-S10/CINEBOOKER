@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
 import { createBooking } from '../services/api';
 import { INDIAN_BANKS } from '../constants';
+import { useLanguage } from '../context/LanguageContext';
 
 const PaymentNetBankingPage: React.FC = () => {
   const { bookingState, confirmBooking } = useAppContext();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [selectedBank, setSelectedBank] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -40,11 +42,11 @@ const PaymentNetBankingPage: React.FC = () => {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4">Pay with Net Banking</h2>
+      <h2 className="text-2xl font-bold mb-4">{t('payWithNetBanking')}</h2>
       <div className="space-y-4">
         <div>
           <label htmlFor="bank-select" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            Select Your Bank
+            {t('selectYourBank')}
           </label>
           <select
             id="bank-select"
@@ -52,7 +54,7 @@ const PaymentNetBankingPage: React.FC = () => {
             onChange={(e) => setSelectedBank(e.target.value)}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
           >
-            <option value="">-- Choose a bank --</option>
+            <option value="">{t('chooseABank')}</option>
             {INDIAN_BANKS.map(bank => (
               <option key={bank} value={bank}>{bank}</option>
             ))}
@@ -63,12 +65,12 @@ const PaymentNetBankingPage: React.FC = () => {
           disabled={isLoading || !selectedBank}
           className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 disabled:bg-primary-300 dark:disabled:bg-primary-800"
         >
-          {isLoading ? 'Processing...' : `Pay ₹${bookingState.totalPrice}`}
+          {isLoading ? t('processing') : `${t('proceedToPay')} ₹${bookingState.totalPrice}`}
         </button>
       </div>
       <div className="mt-6">
         <button onClick={() => navigate('/booking/payment')} className="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md text-sm">
-          Back
+          {t('back')}
         </button>
       </div>
     </div>

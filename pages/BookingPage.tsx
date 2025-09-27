@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
 import type { Theater, Showtime, Seat, Booking } from '../types';
-import { getTheatersByMovie, getShowtimes, getSeats, createBooking } from '../services/api';
+// Fix: removed getTheatersByMovie, getShowtimes, getSeats from this import as they are now provided by AppContext
+import { createBooking } from '../services/api';
 import SeatMap from '../components/SeatMap';
 
 type BookingStep = 'details' | 'seats' | 'payment' | 'confirmation';
 
 const BookingPage: React.FC = () => {
-  const { bookingState, setBookingDetails, clearBooking, user, selectedCity } = useAppContext();
+  // Fix: added getTheatersByMovie, getShowtimes, getSeats from useAppContext
+  const { bookingState, setBookingDetails, clearBooking, user, selectedCity, getTheatersByMovie, getShowtimes, getSeats } = useAppContext();
   const navigate = useNavigate();
   const { movie } = bookingState;
 
@@ -37,7 +39,8 @@ const BookingPage: React.FC = () => {
         }
     };
     fetchTheaters();
-  }, [movie, selectedCity, setBookingDetails]);
+    // Fix: Added getTheatersByMovie to the dependency array
+  }, [movie, selectedCity, setBookingDetails, getTheatersByMovie]);
 
   const handleDateSelect = async (date: string) => {
     if(bookingState.theater) {

@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
 import { createBooking } from '../services/api';
+import { useLanguage } from '../context/LanguageContext';
 
 const PaymentUpiPage: React.FC = () => {
   const { bookingState, confirmBooking } = useAppContext();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [upiId, setUpiId] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -40,11 +42,11 @@ const PaymentUpiPage: React.FC = () => {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4">Pay with UPI</h2>
+      <h2 className="text-2xl font-bold mb-4">{t('payWithUpi')}</h2>
       <div className="space-y-4">
         <div>
           <label htmlFor="upi-id" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            UPI ID
+            {t('upiId')}
           </label>
           <div className="mt-1">
             <input
@@ -63,12 +65,12 @@ const PaymentUpiPage: React.FC = () => {
           disabled={isLoading || !upiId}
           className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 disabled:bg-primary-300 dark:disabled:bg-primary-800"
         >
-          {isLoading ? 'Processing...' : `Pay ₹${bookingState.totalPrice}`}
+          {isLoading ? t('processing') : `${t('proceedToPay')} ₹${bookingState.totalPrice}`}
         </button>
       </div>
       <div className="mt-6">
         <button onClick={() => navigate('/booking/payment')} className="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md text-sm">
-          Back
+          {t('back')}
         </button>
       </div>
     </div>

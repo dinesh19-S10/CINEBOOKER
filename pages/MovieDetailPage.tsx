@@ -1,39 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import type { Movie } from '../types';
-import { getMovieById } from '../services/api';
 import { ClockIcon } from '../components/icons';
 import { useAppContext } from '../context/AppContext';
+import { useLanguage } from '../context/LanguageContext';
 
 const MovieDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { bookingState, setBookingMovie } = useAppContext();
-  const [movie, setMovie] = useState<Movie | undefined>(bookingState.movie);
-  const [loading, setLoading] = useState(!bookingState.movie);
-
+  const { getMovieById, setBookingMovie } = useAppContext();
+  const { t } = useLanguage();
+  const [movie, setMovie] = useState<Movie | undefined>();
+  
   useEffect(() => {
-    // If the movie isn't in context or doesn't match the URL id, fetch it.
-    if ((!movie || movie.id !== id) && id) {
-      const fetchMovie = async () => {
-        setLoading(true);
-        const movieData = await getMovieById(id);
-        if (movieData) {
-          setMovie(movieData);
-          setBookingMovie(movieData); // Set it in the context as well
-        }
-        setLoading(false);
-      };
-      fetchMovie();
+    if (id) {
+      const movieData = getMovieById(id);
+      setMovie(movieData);
+      if (movieData) {
+        setBookingMovie(movieData);
+      }
     }
-  }, [id, movie, setBookingMovie]);
-
-  if (loading) {
-    return <div className="flex-grow flex items-center justify-center dark:bg-gray-900"><p className="dark:text-white">Loading movie details...</p></div>;
-  }
+  }, [id, getMovieById, setBookingMovie]);
 
   if (!movie) {
-    return <div className="flex-grow flex items-center justify-center dark:bg-gray-900"><p className="dark:text-white">Movie not found.</p></div>;
+    return <div className="flex-grow flex items-center justify-center dark:bg-gray-900"><p className="dark:text-white">{t('movieNotFound')}</p></div>;
   }
 
   return (
@@ -54,17 +44,17 @@ const MovieDetailPage: React.FC = () => {
             </div>
             <p className="text-lg mb-6">{movie.description}</p>
             <div className="space-y-2 mb-8">
-                <p><strong className="font-semibold">Release Date:</strong> {new Date(movie.releaseDate).toLocaleDateString()}</p>
-                <p><strong className="font-semibold">Rating:</strong> {movie.rating} / 10</p>
+                <p><strong className="font-semibold">{t('releaseDate')}:</strong> {new Date(movie.releaseDate).toLocaleDateString()}</p>
+                <p><strong className="font-semibold">{t('rating')}:</strong> {movie.rating} / 10</p>
             </div>
             <button
               onClick={() => {
-                if (movie) setBookingMovie(movie); // This also clears previous booking details
+                setBookingMovie(movie); // This also clears previous booking details
                 navigate(`/booking/theater`);
               }}
               className="px-8 py-3 bg-primary-600 text-white font-bold rounded-lg hover:bg-primary-700 transition-colors"
             >
-              Book Tickets
+              {t('bookTickets')}
             </button>
           </div>
         </div>

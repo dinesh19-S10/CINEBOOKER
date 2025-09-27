@@ -1,10 +1,12 @@
 import React from 'react';
 import { Outlet, Navigate, useLocation, Link } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
+import { useLanguage } from '../context/LanguageContext';
 
 const BookingLayout: React.FC = () => {
   const { bookingState, selectedCity, confirmedBooking } = useAppContext();
   const location = useLocation();
+  const { t } = useLanguage();
   const { movie } = bookingState;
 
   // On confirmation page, we rely on `confirmedBooking` instead of `bookingState.movie`
@@ -38,7 +40,7 @@ const BookingLayout: React.FC = () => {
           </div>
           <div className="md:col-span-1">
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md sticky top-24">
-                <h3 className="text-xl font-bold mb-4">Booking Summary</h3>
+                <h3 className="text-xl font-bold mb-4">{t('bookingSummary')}</h3>
                 {summary.movie ? (
                     <>
                         <img src={summary.movie.posterUrl} alt={summary.movie.title} className="rounded-md mb-4" />
@@ -46,19 +48,19 @@ const BookingLayout: React.FC = () => {
                         <p className="text-sm text-gray-500">{summary.movie.language} &bull; {summary.movie.genre}</p>
                     </>
                 ) : (
-                    <p className="text-sm text-gray-500">No movie selected.</p>
+                    <p className="text-sm text-gray-500">{t('noMovieSelected')}</p>
                 )}
                 <hr className="my-4 dark:border-gray-700" />
                 <div className="space-y-2 text-sm">
-                    <p><strong>City:</strong> {selectedCity}</p>
-                    <p><strong>Theater:</strong> {summary.theater?.name || 'Not selected'}</p>
-                    <p><strong>Date:</strong> {summary.date ? new Date(summary.date).toLocaleDateString([], { year: 'numeric', month: 'long', day: 'numeric' }) : 'Not selected'}</p>
-                    <p><strong>Time:</strong> {summary.showtime?.time || 'Not selected'}</p>
-                    <p><strong>Seats:</strong> {summary.seats.join(', ') || 'Not selected'}</p>
+                    <p><strong>{t('city')}:</strong> {selectedCity}</p>
+                    <p><strong>{t('theater')}:</strong> {summary.theater?.name || t('notSelected')}</p>
+                    <p><strong>{t('date')}:</strong> {summary.date ? new Date(summary.date).toLocaleDateString([], { year: 'numeric', month: 'long', day: 'numeric' }) : t('notSelected')}</p>
+                    <p><strong>{t('time')}:</strong> {summary.showtime?.time || t('notSelected')}</p>
+                    <p><strong>{t('seats')}:</strong> {summary.seats.join(', ') || t('notSelected')}</p>
                 </div>
                 <hr className="my-4 dark:border-gray-700" />
                 <div className="text-lg font-bold flex justify-between">
-                    <span>Total</span>
+                    <span>{t('total')}</span>
                     <span>₹{summary.totalPrice}</span>
                 </div>
             </div>

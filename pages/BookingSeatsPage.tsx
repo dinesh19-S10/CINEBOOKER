@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
-import { getSeats } from '../services/api';
 import type { Seat } from '../types';
 import SeatMap from '../components/SeatMap';
+import { useLanguage } from '../context/LanguageContext';
 
 const BookingSeatsPage: React.FC = () => {
-  const { bookingState, setBookingDetails } = useAppContext();
+  const { bookingState, setBookingDetails, getSeats } = useAppContext();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { showtime } = bookingState;
 
   const [seats, setSeats] = useState<Seat[]>([]);
@@ -20,7 +21,7 @@ const BookingSeatsPage: React.FC = () => {
         .then(setSeats)
         .finally(() => setIsLoading(false));
     }
-  }, [showtime]);
+  }, [showtime, getSeats]);
 
   if (!showtime) {
     return <Navigate to="/booking/showtime" />;
@@ -42,15 +43,15 @@ const BookingSeatsPage: React.FC = () => {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4">Select Your Seats</h2>
+      <h2 className="text-2xl font-bold mb-4">{t('selectYourSeats')}</h2>
       {isLoading ? (
-        <p>Loading seat map...</p>
+        <p>{t('loadingSeatMap')}</p>
       ) : (
         <>
           <SeatMap initialSeats={seats} onSelectionChange={handleSeatSelectionChange} />
           <div className="mt-6 flex justify-between items-center">
-            <button onClick={() => navigate('/booking/showtime')} className="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded-md">Back</button>
-            <button onClick={handleProceedToPayment} className="px-6 py-2 bg-primary-600 text-white rounded-md font-semibold">Proceed to Payment</button>
+            <button onClick={() => navigate('/booking/showtime')} className="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded-md">{t('back')}</button>
+            <button onClick={handleProceedToPayment} className="px-6 py-2 bg-primary-600 text-white rounded-md font-semibold">{t('proceedToPay')}</button>
           </div>
         </>
       )}
