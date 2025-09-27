@@ -1,0 +1,5 @@
+{
+  "name": "CineBook - Movie Reservation System",
+  "description": "A comprehensive movie reservation system frontend built with React and Tailwind CSS. It features a complete booking flow from movie selection to ticket confirmation, theme customization, and a responsive design. All backend interactions are mocked for a seamless demonstration.",
+  "requestFramePermissions": []
+}
